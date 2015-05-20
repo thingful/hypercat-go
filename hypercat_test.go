@@ -110,6 +110,24 @@ func TestItemUnmarshalling(t *testing.T) {
 	}
 }
 
+func TestItemUnmarshallingError(t *testing.T) {
+	var invalidJson = []string{
+		`{"href":`,
+		`{"i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"}]}`,
+		`{"href":"/cat","i-object-metadata":[]}`,
+	}
+
+	for _, teststring := range invalidJson {
+		item := Item{}
+
+		err := json.Unmarshal([]byte(teststring), &item)
+
+		if err == nil {
+			t.Errorf("Expected an error with input: '%v'", teststring)
+		}
+	}
+}
+
 func TestHyperCatMarshalling(t *testing.T) {
 	item := Item{Href: "/cat", Description: "Item description"}
 

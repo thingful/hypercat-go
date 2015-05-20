@@ -2,7 +2,7 @@ package hypercat
 
 import (
 	"encoding/json"
-	// "fmt"
+	"errors"
 )
 
 const (
@@ -98,6 +98,16 @@ func (i *Item) UnmarshalJSON(b []byte) error {
 		} else {
 			i.Metadata = append(i.Metadata, m)
 		}
+	}
+
+	if i.Href == "" {
+		err := errors.New(`"href" is a mandatory attribute`)
+		return err
+	}
+
+	if i.Description == "" {
+		err := errors.New(`"` + DescriptionRel + `" is a mandatory metadata element`)
+		return err
 	}
 
 	return nil
