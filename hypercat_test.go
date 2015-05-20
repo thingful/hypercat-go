@@ -21,6 +21,21 @@ func TestRelationMarshalling(t *testing.T) {
 	}
 }
 
+func TestRelationUnmarshalling(t *testing.T) {
+	str := `{"rel":"relation","val":"value"}`
+
+	rel := Relation{}
+	json.Unmarshal([]byte(str), &rel)
+
+	if rel.Rel != "relation" {
+		t.Errorf("Relation unmarshalling error, expected '%v', got '%v'", "relation", rel.Rel)
+	}
+
+	if rel.Value != "value" {
+		t.Errorf("Relation unmarshalling error, expected '%v', got '%v'", "value", rel.Value)
+	}
+}
+
 func TestItemMarshalling(t *testing.T) {
 	var itemtests = []struct {
 		item     Item
