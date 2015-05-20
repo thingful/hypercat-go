@@ -35,28 +35,66 @@ type Relation struct {
 }
 
 /*
- * IObjectMetadata is a slice of Relation objects.
- */
-type IObjectMetadata []Relation
-
-/*
  * Item is the representation of the HyperCat item object, which is the main
  * object stored within a catalogue instance.
  */
 type Item struct {
-	Href        string          `json:"href"`
-	Metadata    IObjectMetadata `json:"i-object-metadata"`
-	Description string          `json:"-"`
+	Href        string     `json:"href"`
+	Metadata    []Relation `json:"i-object-metadata"`
+	Description string     `json:"-"`
+	ContentType string     `json:"-"`
 }
 
 /*
- * MarshalJSON returns the JSON encoding of an Item.
+ * MarshalJSON returns the JSON encoding of an Item. This function is the
+ * custom encoding of the Marshaler interface.
  */
 func (i *Item) MarshalJSON() ([]byte, error) {
-	metadata := append(i.Metadata, Relation{Rel: DescriptionRel, Value: i.Description})
+	metadata := i.Metadata
 
-	return json.Marshal(map[string]interface{}{
-		"href":              i.Href,
-		"i-object-metadata": metadata,
+	if i.Description != "" {
+		metadata = append(metadata, Relation{Rel: DescriptionRel, Value: i.Description})
+	}
+
+	if i.ContentType != "" {
+		metadata = append(metadata, Relation{Rel: ContentTypeRel, Value: i.ContentType})
+	}
+
+	return json.Marshal(struct {
+		Href     string     `json:"href"`
+		Metadata []Relation `json:"i-object-metadata"`
+	}{
+		Href:     i.Href,
+		Metadata: metadata,
+	})
+}
+
+/*
+ * HyperCat is the representation of the HyperCat catalogue object, which is
+ * the parent element of each catalogue instance.
+ */
+type HyperCat struct {
+	Items       []Item     `json:"items"`
+	Metadata    []Relation `json:"item-metadata"`
+	Description string     `json:"-"`
+}
+
+/*
+ * MarshalJSON returns the JSON encoding of a HyperCat. This function is the
+ * implementation of the Marshaler interface.
+ */
+func (h *HyperCat) MarshalJSON() ([]byte, error) {
+	metadata := h.Metadata
+
+	if h.Description != "" {
+		metadata = append(metadata, Relation{Rel: DescriptionRel, Value: h.Description})
+	}
+
+	return json.Marshal(struct {
+		Items    []Item     `json:"items"`
+		Metadata []Relation `json:"item-metadata"`
+	}{
+		Items:    h.Items,
+		Metadata: metadata,
 	})
 }
