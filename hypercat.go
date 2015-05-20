@@ -2,6 +2,7 @@ package hypercat
 
 import (
 	"encoding/json"
+	// "fmt"
 )
 
 const (
@@ -46,8 +47,8 @@ type Item struct {
 }
 
 /*
- * MarshalJSON returns the JSON encoding of an Item. This function is the
- * custom encoding of the Marshaler interface.
+ * MarshalJSON returns the JSON encoding of an Item. This function is the the
+ * required function for structs that implement the Marshaler interface.
  */
 func (i *Item) MarshalJSON() ([]byte, error) {
 	metadata := i.Metadata
@@ -67,6 +68,39 @@ func (i *Item) MarshalJSON() ([]byte, error) {
 		Href:     i.Href,
 		Metadata: metadata,
 	})
+}
+
+/*
+ * UnmarshalJSON is the required function for structs that implement the
+ * Unmarshaler interface.
+ */
+func (i *Item) UnmarshalJSON(b []byte) error {
+	type tempItem struct {
+		Href     string     `json:"href"`
+		Metadata []Relation `json:"i-object-metadata"`
+	}
+
+	t := tempItem{}
+
+	err := json.Unmarshal(b, &t)
+
+	if err != nil {
+		return err
+	}
+
+	i.Href = t.Href
+
+	for _, m := range t.Metadata {
+		if m.Rel == DescriptionRel {
+			i.Description = m.Value
+		} else if m.Rel == ContentTypeRel {
+			i.ContentType = m.Value
+		} else {
+			i.Metadata = append(i.Metadata, m)
+		}
+	}
+
+	return nil
 }
 
 /*
