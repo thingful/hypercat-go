@@ -111,13 +111,13 @@ func TestItemUnmarshalling(t *testing.T) {
 }
 
 func TestItemUnmarshallingError(t *testing.T) {
-	var invalidJson = []string{
+	var invalidJSON = []string{
 		`{"href":`,
 		`{"i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"}]}`,
 		`{"href":"/cat","i-object-metadata":[]}`,
 	}
 
-	for _, teststring := range invalidJson {
+	for _, teststring := range invalidJSON {
 		item := Item{}
 
 		err := json.Unmarshal([]byte(teststring), &item)
