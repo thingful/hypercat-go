@@ -10,10 +10,42 @@ import (
  * object stored within a catalogue instance.
  */
 type Item struct {
-	Href        string     `json:"href"`
-	Metadata    []Relation `json:"i-object-metadata"`
-	Description string     `json:"-"`
-	ContentType string     `json:"-"`
+	Href        string   `json:"href"`
+	Metadata    Metadata `json:"i-object-metadata"`
+	Description string   `json:"-"`
+	ContentType string   `json:"-"`
+}
+
+/*
+ * NewItem is a constructor function that creates and returns an Item instance.
+ */
+func NewItem(href, description string) *Item {
+	return &Item{
+		Href:        href,
+		Description: description,
+		Metadata:    Metadata{},
+	}
+}
+
+/*
+ * AddRelation is a convenience function for adding a relation to an item.
+ */
+func (i *Item) AddRelation(rel, value string) {
+	i.Metadata = append(i.Metadata, Relation{Rel: rel, Value: value})
+}
+
+/*
+ * IsCatalogue returns true if the Item is a HyperCat catalogue, false
+ * otherwise.
+ */
+func (i *Item) IsCatalogue() bool {
+	for _, rel := range i.Metadata {
+		if rel.Rel == ContentTypeRel && rel.Value == HyperCatMediaType {
+			return true
+		}
+	}
+
+	return false
 }
 
 /*
@@ -32,11 +64,11 @@ func (i *Item) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(struct {
-		Href     string     `json:"href"`
-		Metadata []Relation `json:"i-object-metadata"`
+		Href     string    `json:"href"`
+		Metadata *Metadata `json:"i-object-metadata"`
 	}{
 		Href:     i.Href,
-		Metadata: metadata,
+		Metadata: &metadata,
 	})
 }
 
@@ -46,8 +78,8 @@ func (i *Item) MarshalJSON() ([]byte, error) {
  */
 func (i *Item) UnmarshalJSON(b []byte) error {
 	type tempItem struct {
-		Href     string     `json:"href"`
-		Metadata []Relation `json:"i-object-metadata"`
+		Href     string   `json:"href"`
+		Metadata Metadata `json:"i-object-metadata"`
 	}
 
 	t := tempItem{}
@@ -60,13 +92,13 @@ func (i *Item) UnmarshalJSON(b []byte) error {
 
 	i.Href = t.Href
 
-	for _, m := range t.Metadata {
-		if m.Rel == DescriptionRel {
-			i.Description = m.Value
-		} else if m.Rel == ContentTypeRel {
-			i.ContentType = m.Value
+	for _, rel := range t.Metadata {
+		if rel.Rel == DescriptionRel {
+			i.Description = rel.Value
+		} else if rel.Rel == ContentTypeRel {
+			i.ContentType = rel.Value
 		} else {
-			i.Metadata = append(i.Metadata, m)
+			i.Metadata = append(i.Metadata, rel)
 		}
 	}
 

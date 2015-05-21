@@ -6,17 +6,84 @@ import (
 	"testing"
 )
 
+func TestItemConstructor(t *testing.T) {
+	item := NewItem("/data", "description")
+	item.ContentType = "text/plain"
+
+	if item.Href != "/data" {
+		t.Errorf("Item creation error, expected '%v' got '%v'", "/data", item.Href)
+	}
+
+	if item.Description != "description" {
+		t.Errorf("Item creation error, expected '%v' got '%v'", "description", item.Description)
+	}
+
+	if item.ContentType != "text/plain" {
+		t.Errorf("Item creation error, expected '%v' got '%v'", "text/plain", item.ContentType)
+	}
+
+	m := Metadata{}
+
+	if !reflect.DeepEqual(item.Metadata, m) {
+		t.Errorf("Item creation error, expected '%v' got '%v'", m, item.Metadata)
+	}
+}
+
+func TestAddRelation(t *testing.T) {
+	item := NewItem("/data", "description")
+
+	if len(item.Metadata) != 0 {
+		t.Errorf("Item metadata length should be 0")
+	}
+
+	item.AddRelation("relation", "value")
+
+	if len(item.Metadata) != 1 {
+		t.Errorf("Item metadata length should be 1")
+	}
+
+	rel := Relation{Rel: "relation", Value: "value"}
+
+	if !reflect.DeepEqual(rel, item.Metadata[0]) {
+		t.Errorf("Expected Item metadata item to '%v', got '%v'", rel, item.Metadata[0])
+	}
+}
+
+func TestIsCatalogue(t *testing.T) {
+	item := NewItem("/data", "description")
+
+	if item.IsCatalogue() {
+		t.Errorf("Item should not be a catalogue")
+	}
+
+	item.AddRelation(ContentTypeRel, HyperCatMediaType)
+
+	if !item.IsCatalogue() {
+		t.Errorf("Item should be a catalogue.")
+	}
+}
+
+func TestIsCatalogueWrongRel(t *testing.T) {
+	item := NewItem("/data", "description")
+
+	item.AddRelation("foo", HyperCatMediaType)
+
+	if item.IsCatalogue() {
+		t.Errorf("Item should not be a catalogue")
+	}
+}
+
 func TestItemMarshalling(t *testing.T) {
 	var itemTests = []struct {
 		item     Item
 		expected string
 	}{
 		{
-			Item{Href: "/cat", Description: "Description", ContentType: "text/plain", Metadata: []Relation{Relation{"foo", "bar"}}},
+			Item{Href: "/cat", Description: "Description", ContentType: "text/plain", Metadata: Metadata{Relation{"foo", "bar"}}},
 			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"},{"rel":"urn:X-tsbiot:rels:isContentType","val":"text/plain"}]}`,
 		},
 		{
-			Item{Href: "/cat", Description: "Description", Metadata: []Relation{Relation{"foo", "bar"}}},
+			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Relation{"foo", "bar"}}},
 			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"}]}`,
 		},
 		{
@@ -49,11 +116,11 @@ func TestItemUnmarshalling(t *testing.T) {
 		},
 		{
 			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"}]}`,
-			Item{Href: "/cat", Description: "Description", Metadata: []Relation{Relation{"foo", "bar"}}},
+			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Relation{"foo", "bar"}}},
 		},
 		{
 			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"},{"rel":"urn:X-tsbiot:rels:isContentType","val":"text/plain"}]}`,
-			Item{Href: "/cat", Description: "Description", ContentType: "text/plain", Metadata: []Relation{Relation{"foo", "bar"}}},
+			Item{Href: "/cat", Description: "Description", ContentType: "text/plain", Metadata: Metadata{Relation{"foo", "bar"}}},
 		},
 	}
 
@@ -75,24 +142,6 @@ func TestItemUnmarshalling(t *testing.T) {
 
 		if !reflect.DeepEqual(item.Metadata, testcase.expected.Metadata) {
 			t.Errorf("Item unmarshalling error, expected '%v', got '%v'", testcase.expected.Metadata, item.Metadata)
-		}
-	}
-}
-
-func TestItemUnmarshallingError(t *testing.T) {
-	var invalidJSON = []string{
-		`{"href":`,
-		`{"i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"}]}`,
-		`{"href":"/cat","i-object-metadata":[]}`,
-	}
-
-	for _, teststring := range invalidJSON {
-		item := Item{}
-
-		err := json.Unmarshal([]byte(teststring), &item)
-
-		if err == nil {
-			t.Errorf("Expected an error with input: '%v'", teststring)
 		}
 	}
 }
