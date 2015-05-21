@@ -10,7 +10,7 @@ const (
 	HyperCatVersion = "1.1"
 
 	// MediaType is the default mime type of HyperCat resources
-	MediaType = "application/vnd.tsbiot.catalogue+json"
+	HyperCatMediaType = "application/vnd.tsbiot.catalogue+json"
 
 	// DescriptionRel is the URI for the hasDescription relationship
 	DescriptionRel = "urn:X-tsbiot:rels:hasDescription:en"
@@ -33,9 +33,27 @@ const (
  * the parent element of each catalogue instance.
  */
 type HyperCat struct {
-	Items       []Item     `json:"items"`
-	Metadata    []Relation `json:"item-metadata"`
-	Description string     `json:"-"`
+	Items       Items    `json:"items"`
+	Metadata    Metadata `json:"item-metadata"`
+	Description string   `json:"-"` // 1.0 spec is unclear about whether there can be more than one description. We assume not.
+}
+
+/*
+ * NewHyperCat is a constructor function that creates and returns a HyperCat
+ * instance.
+ */
+func NewHyperCat(description string) *HyperCat {
+	return &HyperCat{
+		Description: description,
+		Metadata:    Metadata{},
+	}
+}
+
+/*
+ * AddItem is a convenience function for adding an Item to a catalogue.
+ */
+func (h *HyperCat) AddItem(item *Item) {
+	h.Items = append(h.Items, *item)
 }
 
 /*
@@ -50,10 +68,39 @@ func (h *HyperCat) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(struct {
-		Items    []Item     `json:"items"`
-		Metadata []Relation `json:"item-metadata"`
+		Items    []Item   `json:"items"`
+		Metadata Metadata `json:"item-metadata"`
 	}{
 		Items:    h.Items,
 		Metadata: metadata,
 	})
+}
+
+/*
+ * UnmarshalJSON is the required function for structs that implement the
+ * Unmarshaler interface.
+ */
+func (h *HyperCat) UnmarshalJSON(b []byte) error {
+	type tempCat struct {
+		Items    Items    `json:"items"`
+		Metadata Metadata `json:"item-metadata"`
+	}
+
+	t := tempCat{}
+
+	err := json.Unmarshal(b, &t)
+
+	if err != nil {
+		return err
+	}
+
+	for _, rel := range t.Metadata {
+		if rel.Rel == DescriptionRel {
+			h.Description = rel.Value
+		} else {
+			h.Metadata = append(h.Metadata, rel)
+		}
+	}
+
+	return nil
 }
