@@ -115,3 +115,37 @@ func TestInvalidHyperCatUnmarshalling(t *testing.T) {
 		}
 	}
 }
+
+func TestValidParse(t *testing.T) {
+	item := NewItem("/cat", "Item description")
+
+	var hypercatTests = []struct {
+		input    string
+		expected HyperCat
+	}{
+		{
+			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			HyperCat{Items: Items{*item}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
+		},
+		{
+			`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			HyperCat{Items: Items{}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
+		},
+		{
+			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			HyperCat{Items: Items{*item}, Description: "Catalogue description"},
+		},
+	}
+
+	for _, testcase := range hypercatTests {
+		cat, err := Parse(testcase.input)
+
+		if err != nil {
+			t.Errorf("HyperCat parsing error: '%v'", err)
+		}
+
+		if cat.Description != testcase.expected.Description {
+			t.Errorf("HyperCat unmarshalling error, expected '%v', got '%v'", testcase.expected.Description, cat.Description)
+		}
+	}
+}

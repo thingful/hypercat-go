@@ -50,6 +50,21 @@ func NewHyperCat(description string) *HyperCat {
 }
 
 /*
+ * Parse is a convenience function that parses a HyperCat catalogue string, and
+ * builds an in memory HyperCat instance.
+ */
+func Parse(str string) (*HyperCat, error) {
+	cat := HyperCat{}
+	err := json.Unmarshal([]byte(str), &cat)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &cat, nil
+}
+
+/*
  * AddItem is a convenience function for adding an Item to a catalogue.
  */
 func (h *HyperCat) AddItem(item *Item) {
