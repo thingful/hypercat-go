@@ -20,3 +20,7 @@ Usage examples to follow, when and if any useful examples are forthcoming.
 ## License
 
 See [LICENSE](LICENSE)
+
+## Build Status
+
+[![wercker status](https://app.wercker.com/status/555ad920801f3936bc7031747c74e072/m "wercker status")](https://app.wercker.com/project/bykey/555ad920801f3936bc7031747c74e072)
