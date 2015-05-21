@@ -6,7 +6,6 @@ GOLINT = golint
 default: test
 
 setup:
-	$(GOCMD) get -u github.com/tools/godep
 	$(GOCMD) get -u github.com/golang/lint/golint
 
 test:
