@@ -12,8 +12,7 @@ import (
 type Item struct {
 	Href        string   `json:"href"`
 	Metadata    Metadata `json:"i-object-metadata"`
-	Description string   `json:"-"`
-	ContentType string   `json:"-"`
+	Description string   `json:"-"` // 1.0 spec is unclear about whether there can be more than one description. We assume not.
 }
 
 /*
@@ -59,10 +58,6 @@ func (i *Item) MarshalJSON() ([]byte, error) {
 		metadata = append(metadata, Relation{Rel: DescriptionRel, Value: i.Description})
 	}
 
-	if i.ContentType != "" {
-		metadata = append(metadata, Relation{Rel: ContentTypeRel, Value: i.ContentType})
-	}
-
 	return json.Marshal(struct {
 		Href     string    `json:"href"`
 		Metadata *Metadata `json:"i-object-metadata"`
@@ -95,8 +90,6 @@ func (i *Item) UnmarshalJSON(b []byte) error {
 	for _, rel := range t.Metadata {
 		if rel.Rel == DescriptionRel {
 			i.Description = rel.Value
-		} else if rel.Rel == ContentTypeRel {
-			i.ContentType = rel.Value
 		} else {
 			i.Metadata = append(i.Metadata, rel)
 		}

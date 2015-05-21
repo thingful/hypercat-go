@@ -8,7 +8,6 @@ import (
 
 func TestItemConstructor(t *testing.T) {
 	item := NewItem("/data", "description")
-	item.ContentType = "text/plain"
 
 	if item.Href != "/data" {
 		t.Errorf("Item creation error, expected '%v' got '%v'", "/data", item.Href)
@@ -16,10 +15,6 @@ func TestItemConstructor(t *testing.T) {
 
 	if item.Description != "description" {
 		t.Errorf("Item creation error, expected '%v' got '%v'", "description", item.Description)
-	}
-
-	if item.ContentType != "text/plain" {
-		t.Errorf("Item creation error, expected '%v' got '%v'", "text/plain", item.ContentType)
 	}
 
 	m := Metadata{}
@@ -79,10 +74,6 @@ func TestItemMarshalling(t *testing.T) {
 		expected string
 	}{
 		{
-			Item{Href: "/cat", Description: "Description", ContentType: "text/plain", Metadata: Metadata{Relation{"foo", "bar"}}},
-			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"},{"rel":"urn:X-tsbiot:rels:isContentType","val":"text/plain"}]}`,
-		},
-		{
 			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Relation{"foo", "bar"}}},
 			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"}]}`,
 		},
@@ -118,10 +109,6 @@ func TestItemUnmarshalling(t *testing.T) {
 			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"}]}`,
 			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Relation{"foo", "bar"}}},
 		},
-		{
-			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"},{"rel":"urn:X-tsbiot:rels:isContentType","val":"text/plain"}]}`,
-			Item{Href: "/cat", Description: "Description", ContentType: "text/plain", Metadata: Metadata{Relation{"foo", "bar"}}},
-		},
 	}
 
 	for _, testcase := range itemTests {
@@ -134,10 +121,6 @@ func TestItemUnmarshalling(t *testing.T) {
 
 		if item.Description != testcase.expected.Description {
 			t.Errorf("Item unmarshalling error, expected '%v', got '%v'", testcase.expected.Description, item.Description)
-		}
-
-		if item.ContentType != testcase.expected.ContentType {
-			t.Errorf("Item unmarshalling error, expected '%v', got '%v'", testcase.expected.ContentType, item.ContentType)
 		}
 
 		if !reflect.DeepEqual(item.Metadata, testcase.expected.Metadata) {
