@@ -16,6 +16,11 @@ type Item struct {
 }
 
 /*
+ * Items is a simple type alias for a slice of Item structs.
+ */
+type Items []Item
+
+/*
  * NewItem is a constructor function that creates and returns an Item instance.
  */
 func NewItem(href, description string) *Item {
