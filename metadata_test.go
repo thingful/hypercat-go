@@ -35,3 +35,19 @@ func TestRelationUnmarshalling(t *testing.T) {
 		t.Errorf("Relation unmarshalling error, expected '%v', got '%v'", "value", rel.Value)
 	}
 }
+
+func TestMetadataMarshalling(t *testing.T) {
+	metadata := Metadata{Relation{"relation", "value"}}
+
+	bytes, err := json.Marshal(metadata)
+
+	if err != nil {
+		t.Errorf("Error marshalling Metadata: %v", err)
+	}
+
+	expected := `[{"rel":"relation","val":"value"}]`
+
+	if string(bytes) != expected {
+		t.Errorf("Metadata marshalling error, expected '%v', got '%v'", expected, string(bytes))
+	}
+}

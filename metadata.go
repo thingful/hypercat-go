@@ -9,3 +9,8 @@ type Relation struct {
 	Rel   string `json:"rel"`
 	Value string `json:"val"`
 }
+
+/*
+ * Metadata is an alias for a slice of Relation structs.
+ */
+type Metadata []Relation
