@@ -99,3 +99,19 @@ func TestHyperCatUnmarshalling(t *testing.T) {
 		}
 	}
 }
+
+func TestInvalidHyperCatUnmarshalling(t *testing.T) {
+	invalidInputs := []string{
+		`{"items":[],"item-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":""}]}`,
+		`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"}]}`,
+	}
+
+	for _, testcase := range invalidInputs {
+		cat := HyperCat{}
+		err := json.Unmarshal([]byte(testcase), &cat)
+
+		if err == nil {
+			t.Errorf("HyperCat unmarshalling should have reported an error with input: '%v'", testcase)
+		}
+	}
+}

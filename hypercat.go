@@ -2,7 +2,7 @@ package hypercat
 
 import (
 	"encoding/json"
-	// "errors"
+	"errors"
 )
 
 const (
@@ -100,6 +100,11 @@ func (h *HyperCat) UnmarshalJSON(b []byte) error {
 		} else {
 			h.Metadata = append(h.Metadata, rel)
 		}
+	}
+
+	if h.Description == "" {
+		err := errors.New(`"` + DescriptionRel + `" is a mandatory metadata element`)
+		return err
 	}
 
 	return nil

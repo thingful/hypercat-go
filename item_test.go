@@ -128,3 +128,20 @@ func TestItemUnmarshalling(t *testing.T) {
 		}
 	}
 }
+
+func TestInvalidItemUnmarshalling(t *testing.T) {
+	invalidInputs := []string{
+		`{"href":"/cat","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":""}]}`,
+		`{"href":"/cat","i-object-metadata":[]}`,
+		`{"href":"","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"}]}`,
+	}
+
+	for _, testcase := range invalidInputs {
+		item := Item{}
+		err := json.Unmarshal([]byte(testcase), &item)
+
+		if err == nil {
+			t.Errorf("Item unmarshalling should have reported an error with input: '%v'", testcase)
+		}
+	}
+}
