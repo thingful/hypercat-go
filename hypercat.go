@@ -7,25 +7,25 @@ import (
 
 const (
 	// HyperCatVersion is the version of HyperCat this library currently supports
-	HyperCatVersion = "1.1"
+	HyperCatVersion = "2.0"
 
 	// MediaType is the default mime type of HyperCat resources
-	HyperCatMediaType = "application/vnd.tsbiot.catalogue+json"
+	HyperCatMediaType = "application/vnd.hypercat.catalogue+json"
 
 	// DescriptionRel is the URI for the hasDescription relationship
-	DescriptionRel = "urn:X-tsbiot:rels:hasDescription:en"
+	DescriptionRel = "urn:X-hypercat:rels:hasDescription:en"
 
 	// ContentTypeRel is the URI for the isContentType relationship
-	ContentTypeRel = "urn:X-tsbiot:rels:isContentType"
+	ContentTypeRel = "urn:X-hypercat:rels:isContentType"
 
 	// HomepageRel is the URI for hasHomepage relationship
-	HomepageRel = "urn:X-tsbiot:rels:hasHomepage"
+	HomepageRel = "urn:X-hypercat:rels:hasHomepage"
 
 	// ContainsContentTypeRel is the URI for the containsContentType relationship
-	ContainsContentTypeRel = "urn:X-tsbiot:rels:containsContentType"
+	ContainsContentTypeRel = "urn:X-hypercat:rels:containsContentType"
 
 	// SupportsSearchRel is the URI for the supportsSearch relationship
-	SupportsSearchRel = "urn:X-tsbiot:rels:supportsSearch"
+	SupportsSearchRel = "urn:X-hypercat:rels:supportsSearch"
 )
 
 /*
@@ -35,7 +35,7 @@ const (
 type HyperCat struct {
 	Items       Items    `json:"items"`
 	Metadata    Metadata `json:"item-metadata"`
-	Description string   `json:"-"` // 1.0 spec is unclear about whether there can be more than one description. We assume not.
+	Description string   `json:"-"` // HyperCat spec is fuzzy about whether there can be more than one description. We assume not.
 }
 
 /*

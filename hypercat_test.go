@@ -44,15 +44,15 @@ func TestHyperCatMarshalling(t *testing.T) {
 	}{
 		{
 			HyperCat{Items: Items{*item}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
-			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
 		},
 		{
 			HyperCat{Items: Items{}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
-			`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
 		},
 		{
 			HyperCat{Items: Items{*item}, Description: "Catalogue description"},
-			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
 		},
 	}
 
@@ -77,15 +77,15 @@ func TestHyperCatUnmarshalling(t *testing.T) {
 		expected HyperCat
 	}{
 		{
-			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
 			HyperCat{Items: Items{*item}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
 		},
 		{
-			`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
 			HyperCat{Items: Items{}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
 		},
 		{
-			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
 			HyperCat{Items: Items{*item}, Description: "Catalogue description"},
 		},
 	}
@@ -102,7 +102,7 @@ func TestHyperCatUnmarshalling(t *testing.T) {
 
 func TestInvalidHyperCatUnmarshalling(t *testing.T) {
 	invalidInputs := []string{
-		`{"items":[],"item-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":""}]}`,
+		`{"items":[],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":""}]}`,
 		`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"}]}`,
 	}
 
@@ -124,15 +124,15 @@ func TestValidParse(t *testing.T) {
 		expected HyperCat
 	}{
 		{
-			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
 			HyperCat{Items: Items{*item}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
 		},
 		{
-			`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
 			HyperCat{Items: Items{}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
 		},
 		{
-			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
 			HyperCat{Items: Items{*item}, Description: "Catalogue description"},
 		},
 	}

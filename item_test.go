@@ -75,11 +75,11 @@ func TestItemMarshalling(t *testing.T) {
 	}{
 		{
 			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Relation{"foo", "bar"}}},
-			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"}]}`,
+			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
 		},
 		{
 			Item{Href: "/cat", Description: "Description"},
-			`{"href":"/cat","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"}]}`,
+			`{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
 		},
 	}
 
@@ -102,11 +102,11 @@ func TestItemUnmarshalling(t *testing.T) {
 		expected Item
 	}{
 		{
-			`{"href":"/cat","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"}]}`,
+			`{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
 			Item{Href: "/cat", Description: "Description"},
 		},
 		{
-			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"}]}`,
+			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
 			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Relation{"foo", "bar"}}},
 		},
 	}
@@ -131,9 +131,9 @@ func TestItemUnmarshalling(t *testing.T) {
 
 func TestInvalidItemUnmarshalling(t *testing.T) {
 	invalidInputs := []string{
-		`{"href":"/cat","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":""}]}`,
+		`{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":""}]}`,
 		`{"href":"/cat","i-object-metadata":[]}`,
-		`{"href":"","i-object-metadata":[{"rel":"urn:X-tsbiot:rels:hasDescription:en","val":"Description"}]}`,
+		`{"href":"","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
 	}
 
 	for _, testcase := range invalidInputs {
