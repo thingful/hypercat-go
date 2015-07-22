@@ -20,6 +20,48 @@ func TestHyperCatConstructor(t *testing.T) {
 	}
 }
 
+func TestAddRelToCatalogue(t *testing.T) {
+	cat := NewHyperCat("description")
+
+	if len(cat.Metadata) != 0 {
+		t.Errorf("Catalogue metadata length should be 0")
+	}
+
+	cat.AddRel("relation", "value")
+
+	if len(cat.Metadata) != 1 {
+		t.Errorf("Catalogue metadata length should be 1")
+	}
+
+	rel := Rel{Rel: "relation", Val: "value"}
+
+	if !reflect.DeepEqual(rel, cat.Metadata[0]) {
+		t.Errorf("Expected Catalogue metadata item '%v', got '%v'", rel, cat.Metadata[0])
+	}
+}
+
+func TestReplaceRelOnCatalogue(t *testing.T) {
+	cat := NewHyperCat("description")
+
+	cat.AddRel("relation", "value")
+
+	if len(cat.Metadata) != 1 {
+		t.Errorf("Catalogue metadata length should be 1")
+	}
+
+	cat.ReplaceRel("relation", "newvalue")
+
+	if len(cat.Metadata) != 1 {
+		t.Errorf("Catalogue metadata length should be 1")
+	}
+
+	rel := Rel{Rel: "relation", Val: "newvalue"}
+
+	if !reflect.DeepEqual(rel, cat.Metadata[0]) {
+		t.Errorf("Expected Catalogue metadata '%v', got '%v'", rel, cat.Metadata[0])
+	}
+}
+
 func TestAddItem(t *testing.T) {
 	cat := NewHyperCat("Catalogue description")
 	item := NewItem("/foo", "Item description")

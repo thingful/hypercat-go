@@ -24,7 +24,7 @@ func TestItemConstructor(t *testing.T) {
 	}
 }
 
-func TestAddRel(t *testing.T) {
+func TestAddRelToItem(t *testing.T) {
 	item := NewItem("/data", "description")
 
 	if len(item.Metadata) != 0 {
@@ -44,7 +44,7 @@ func TestAddRel(t *testing.T) {
 	}
 }
 
-func TestReplaceRel(t *testing.T) {
+func TestReplaceRelToItem(t *testing.T) {
 	item := NewItem("/data", "description")
 
 	item.AddRel("relation", "value")

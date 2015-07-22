@@ -65,6 +65,28 @@ func Parse(str string) (*HyperCat, error) {
 }
 
 /*
+ * AddRel is a function for adding a Rel object to a catalogue. This may result
+ * in duplicated Rel keys as this is permitted by the HyperCat spec.
+ * TODO: this code is duplicated in item
+ */
+func (h *HyperCat) AddRel(rel, val string) {
+	h.Metadata = append(h.Metadata, Rel{Rel: rel, Val: val})
+}
+
+/*
+ * ReplaceRel is a function that attempts to replace the value of a specific
+ * Rel object if it is attached to this Catalogue. If the Rel key isn't found
+ * this will have no effect.
+ */
+func (h *HyperCat) ReplaceRel(rel, val string) {
+	for i, relationship := range h.Metadata {
+		if relationship.Rel == rel {
+			h.Metadata[i] = Rel{Rel: rel, Val: val}
+		}
+	}
+}
+
+/*
  * AddItem is a function for adding an Item to a catalogue. Returns an error if
  * we try to add an Item whose href is already defined within the catalogue.
  */
@@ -149,4 +171,32 @@ func (h *HyperCat) UnmarshalJSON(b []byte) error {
 	}
 
 	return nil
+}
+
+/*
+ * Rels returns a slice containing all the Rel values of catalogue's metadata.
+ */
+func (h *HyperCat) Rels() []string {
+	rels := make([]string, len(h.Metadata))
+
+	for i, rel := range h.Metadata {
+		rels[i] = rel.Rel
+	}
+
+	return rels
+}
+
+/*
+ * Vals returns a slice of all values that match the given rel value.
+ */
+func (h *HyperCat) Vals(key string) []string {
+	vals := []string{}
+
+	for _, rel := range h.Metadata {
+		if rel.Rel == key {
+			vals = append(vals, rel.Val)
+		}
+	}
+
+	return vals
 }
