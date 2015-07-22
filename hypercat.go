@@ -65,7 +65,8 @@ func Parse(str string) (*HyperCat, error) {
 }
 
 /*
- * AddItem is a convenience function for adding an Item to a catalogue.
+ * AddItem is a function for adding an Item to a catalogue. Returns an error if
+ * we try to add an Item whose href is already defined within the catalogue.
  */
 func (h *HyperCat) AddItem(item *Item) error {
 	for _, i := range h.Items {
@@ -78,6 +79,22 @@ func (h *HyperCat) AddItem(item *Item) error {
 	h.Items = append(h.Items, *item)
 
 	return nil
+}
+
+/*
+ * ReplaceItem is a function for replacing an item within a catalogue. Returns an error
+ * if we try to replace an Item that isn't defined within the catalogue.
+ */
+func (h *HyperCat) ReplaceItem(newItem *Item) error {
+	for index, oldItem := range h.Items {
+		if newItem.Href == oldItem.Href {
+			h.Items[index] = *newItem
+			return nil
+		}
+	}
+
+	err := errors.New(`An item with href: "` + newItem.Href + `" was not found within the catalogue`)
+	return err
 }
 
 /*

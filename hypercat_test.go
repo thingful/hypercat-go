@@ -58,6 +58,40 @@ func TestAddDuplicateItem(t *testing.T) {
 	}
 }
 
+func TestReplaceItem(t *testing.T) {
+	cat := NewHyperCat("Catalogue description")
+	item1 := NewItem("/foo", "Item1 description")
+
+	cat.AddItem(item1)
+
+	item2 := NewItem("/foo", "Item2 description")
+
+	err := cat.ReplaceItem(item2)
+
+	if err != nil {
+		t.Errorf("Error replacing item in catalogue: %v", err)
+	}
+
+	if len(cat.Items) != 1 {
+		t.Errorf("Catalogue items length should be 1, got '%v'", len(cat.Items))
+	}
+
+	if cat.Items[0].Description != "Item2 description" {
+		t.Errorf("Item not replaced")
+	}
+}
+
+func TestReplacingMissingItem(t *testing.T) {
+	cat := NewHyperCat("Catalogue description")
+	item1 := NewItem("/foo", "Item1 description")
+
+	err := cat.ReplaceItem(item1)
+
+	if err == nil {
+		t.Errorf("Replacing non existing item should have returned an error")
+	}
+}
+
 func TestHyperCatMarshalling(t *testing.T) {
 	item := NewItem("/cat", "Item description")
 
