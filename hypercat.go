@@ -66,6 +66,7 @@ func NewHyperCat(description string) *HyperCat {
 		Description: description,
 		Metadata:    Metadata{},
 		ContentType: HyperCatMediaType,
+		Items:       make(Items, 0),
 	}
 }
 
