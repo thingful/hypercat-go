@@ -12,7 +12,7 @@ import (
 type Item struct {
 	Href        string   `json:"href"`
 	Metadata    Metadata `json:"i-object-metadata"`
-	Description string   `json:"-"` // 1.0 spec is unclear about whether there can be more than one description. We assume not.
+	Description string   `json:"-"` // Spec is unclear about whether there can be more than one description. We assume not.
 }
 
 /*
@@ -35,7 +35,7 @@ func NewItem(href, description string) *Item {
  * AddRelation is a convenience function for adding a relation to an item.
  */
 func (i *Item) AddRelation(rel, value string) {
-	i.Metadata = append(i.Metadata, Relation{Rel: rel, Value: value})
+	i.Metadata = append(i.Metadata, Rel{Rel: rel, Value: value})
 }
 
 /*
@@ -60,7 +60,7 @@ func (i *Item) MarshalJSON() ([]byte, error) {
 	metadata := i.Metadata
 
 	if i.Description != "" {
-		metadata = append(metadata, Relation{Rel: DescriptionRel, Value: i.Description})
+		metadata = append(metadata, Rel{Rel: DescriptionRel, Value: i.Description})
 	}
 
 	return json.Marshal(struct {

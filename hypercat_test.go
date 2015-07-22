@@ -43,11 +43,11 @@ func TestHyperCatMarshalling(t *testing.T) {
 		expected string
 	}{
 		{
-			HyperCat{Items: Items{*item}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
+			HyperCat{Items: Items{*item}, Metadata: Metadata{Rel{Rel: "foo", Value: "bar"}}, Description: "Catalogue description"},
 			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
 		},
 		{
-			HyperCat{Items: Items{}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
+			HyperCat{Items: Items{}, Metadata: Metadata{Rel{Rel: "foo", Value: "bar"}}, Description: "Catalogue description"},
 			`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
 		},
 		{
@@ -78,11 +78,11 @@ func TestHyperCatUnmarshalling(t *testing.T) {
 	}{
 		{
 			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
-			HyperCat{Items: Items{*item}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
+			HyperCat{Items: Items{*item}, Metadata: Metadata{Rel{Rel: "foo", Value: "bar"}}, Description: "Catalogue description"},
 		},
 		{
 			`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
-			HyperCat{Items: Items{}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
+			HyperCat{Items: Items{}, Metadata: Metadata{Rel{Rel: "foo", Value: "bar"}}, Description: "Catalogue description"},
 		},
 		{
 			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
@@ -125,11 +125,11 @@ func TestValidParse(t *testing.T) {
 	}{
 		{
 			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
-			HyperCat{Items: Items{*item}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
+			HyperCat{Items: Items{*item}, Metadata: Metadata{Rel{Rel: "foo", Value: "bar"}}, Description: "Catalogue description"},
 		},
 		{
 			`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
-			HyperCat{Items: Items{}, Metadata: Metadata{Relation{"foo", "bar"}}, Description: "Catalogue description"},
+			HyperCat{Items: Items{}, Metadata: Metadata{Rel{Rel: "foo", Value: "bar"}}, Description: "Catalogue description"},
 		},
 		{
 			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,

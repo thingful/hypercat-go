@@ -79,7 +79,7 @@ func (h *HyperCat) MarshalJSON() ([]byte, error) {
 	metadata := h.Metadata
 
 	if h.Description != "" {
-		metadata = append(metadata, Relation{Rel: DescriptionRel, Value: h.Description})
+		metadata = append(metadata, Rel{Rel: DescriptionRel, Value: h.Description})
 	}
 
 	return json.Marshal(struct {
