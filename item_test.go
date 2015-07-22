@@ -24,23 +24,55 @@ func TestItemConstructor(t *testing.T) {
 	}
 }
 
-func TestAddRelation(t *testing.T) {
+func TestAddRelToItem(t *testing.T) {
 	item := NewItem("/data", "description")
 
 	if len(item.Metadata) != 0 {
 		t.Errorf("Item metadata length should be 0")
 	}
 
-	item.AddRelation("relation", "value")
+	item.AddRel("relation", "value")
 
 	if len(item.Metadata) != 1 {
 		t.Errorf("Item metadata length should be 1")
 	}
 
-	rel := Relation{Rel: "relation", Value: "value"}
+	rel := Rel{Rel: "relation", Val: "value"}
 
 	if !reflect.DeepEqual(rel, item.Metadata[0]) {
 		t.Errorf("Expected Item metadata item to '%v', got '%v'", rel, item.Metadata[0])
+	}
+}
+
+func TestReplaceRelToItem(t *testing.T) {
+	item := NewItem("/data", "description")
+
+	item.AddRel("relation", "value")
+
+	if len(item.Metadata) != 1 {
+		t.Errorf("Item metadata length should be 1")
+	}
+
+	item.ReplaceRel("relation", "newvalue")
+
+	if len(item.Metadata) != 1 {
+		t.Errorf("Item metadata length should be 1")
+	}
+
+	rel := Rel{Rel: "relation", Val: "newvalue"}
+
+	if !reflect.DeepEqual(rel, item.Metadata[0]) {
+		t.Errorf("Expected Item metadata item to '%v', got '%v'", rel, item.Metadata[0])
+	}
+}
+
+func TestReplaceRelWhenNotFound(t *testing.T) {
+	item := NewItem("/data", "description")
+
+	item.ReplaceRel("relation", "newvalue")
+
+	if len(item.Metadata) != 0 {
+		t.Errorf("Item metadata length should be 0")
 	}
 }
 
@@ -51,7 +83,7 @@ func TestIsCatalogue(t *testing.T) {
 		t.Errorf("Item should not be a catalogue")
 	}
 
-	item.AddRelation(ContentTypeRel, HyperCatMediaType)
+	item.AddRel(ContentTypeRel, HyperCatMediaType)
 
 	if !item.IsCatalogue() {
 		t.Errorf("Item should be a catalogue.")
@@ -61,7 +93,7 @@ func TestIsCatalogue(t *testing.T) {
 func TestIsCatalogueWrongRel(t *testing.T) {
 	item := NewItem("/data", "description")
 
-	item.AddRelation("foo", HyperCatMediaType)
+	item.AddRel("foo", HyperCatMediaType)
 
 	if item.IsCatalogue() {
 		t.Errorf("Item should not be a catalogue")
@@ -74,7 +106,7 @@ func TestItemMarshalling(t *testing.T) {
 		expected string
 	}{
 		{
-			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Relation{"foo", "bar"}}},
+			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Rel{Rel: "foo", Val: "bar"}}},
 			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
 		},
 		{
@@ -107,7 +139,7 @@ func TestItemUnmarshalling(t *testing.T) {
 		},
 		{
 			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
-			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Relation{"foo", "bar"}}},
+			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Rel{Rel: "foo", Val: "bar"}}},
 		},
 	}
 
@@ -143,5 +175,35 @@ func TestInvalidItemUnmarshalling(t *testing.T) {
 		if err == nil {
 			t.Errorf("Item unmarshalling should have reported an error with input: '%v'", testcase)
 		}
+	}
+}
+
+func TestItemRels(t *testing.T) {
+	item := NewItem("/data", "description")
+
+	item.AddRel("relation1", "value1")
+	item.AddRel("relation2", "value2")
+	item.AddRel("relation1", "value3")
+
+	expected := []string{"relation1", "relation2", "relation1"}
+	got := item.Rels()
+
+	if !reflect.DeepEqual(expected, got) {
+		t.Errorf("Item rels error, expected '%v', got '%v'", expected, got)
+	}
+}
+
+func TestItemVals(t *testing.T) {
+	item := NewItem("/data", "description")
+
+	item.AddRel("relation1", "value1")
+	item.AddRel("relation2", "value2")
+	item.AddRel("relation1", "value3")
+
+	expected := []string{"value1", "value3"}
+	got := item.Vals("relation1")
+
+	if !reflect.DeepEqual(expected, got) {
+		t.Errorf("Item Vals error, expected '%v', got '%v'", expected, got)
 	}
 }

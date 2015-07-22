@@ -1,16 +1,26 @@
 package hypercat
 
 /*
- * Relation is the representation of the HyperCat 1.1 metadata object which is
- * used to describe a relationship between an entity and some other entity or
- * concept.
+ * Rel is the representation of the HyperCat 2.0 individual metadata object
+ * which is used to describe a relationship between an entity and some other
+ * entity or concept.
  */
-type Relation struct {
-	Rel   string `json:"rel"`
-	Value string `json:"val"`
+type Rel struct {
+	Rel string `json:"rel"`
+	Val string `json:"val"`
 }
 
 /*
- * Metadata is an alias for a slice of Relation structs.
+ * Metadata is a simple type alias for a slice of Rel structs.
  */
-type Metadata []Relation
+type Metadata []Rel
+
+/*
+ * NewRel is a constructor function that creates and returns a Rel instance.
+ */
+func NewRel(rel, val string) *Rel {
+	return &Rel{
+		Rel: rel,
+		Val: val,
+	}
+}
