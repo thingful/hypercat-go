@@ -32,25 +32,32 @@ func NewItem(href, description string) *Item {
 }
 
 /*
- * AddRel is a convenience function for adding a Rel object to an item.
+ * AddRel is a function for adding a Rel object to an item. This may result in
+ * duplicated Rel keys as this is permitted by the HyperCat spec.
  */
-func (i *Item) AddRel(rel, val string) {
-	i.Metadata = append(i.Metadata, Rel{Rel: rel, Val: val})
+func (item *Item) AddRel(rel, val string) {
+	item.Metadata = append(item.Metadata, Rel{Rel: rel, Val: val})
 }
 
 /*
- * AddMetadata is a function for adding multiple Rel objects in one go.
+ * ReplaceRel is a function that attempts to replace the value of a specific Rel
+ * object if it is attached to this Item. If the Rel key isn't found this will have
+ * no effect.
  */
-func (i *Item) AddMetadata(metadata Metadata) {
-	i.Metadata = append(i.Metadata, metadata...)
+func (item *Item) ReplaceRel(rel, val string) {
+	for i, relationship := range item.Metadata {
+		if relationship.Rel == rel {
+			item.Metadata[i] = Rel{Rel: rel, Val: val}
+		}
+	}
 }
 
 /*
  * IsCatalogue returns true if the Item is a HyperCat catalogue, false
  * otherwise.
  */
-func (i *Item) IsCatalogue() bool {
-	for _, rel := range i.Metadata {
+func (item *Item) IsCatalogue() bool {
+	for _, rel := range item.Metadata {
 		if rel.Rel == ContentTypeRel && rel.Val == HyperCatMediaType {
 			return true
 		}
@@ -63,18 +70,18 @@ func (i *Item) IsCatalogue() bool {
  * MarshalJSON returns the JSON encoding of an Item. This function is the the
  * required function for structs that implement the Marshaler interface.
  */
-func (i *Item) MarshalJSON() ([]byte, error) {
-	metadata := i.Metadata
+func (item *Item) MarshalJSON() ([]byte, error) {
+	metadata := item.Metadata
 
-	if i.Description != "" {
-		metadata = append(metadata, Rel{Rel: DescriptionRel, Val: i.Description})
+	if item.Description != "" {
+		metadata = append(metadata, Rel{Rel: DescriptionRel, Val: item.Description})
 	}
 
 	return json.Marshal(struct {
 		Href     string    `json:"href"`
 		Metadata *Metadata `json:"i-object-metadata"`
 	}{
-		Href:     i.Href,
+		Href:     item.Href,
 		Metadata: &metadata,
 	})
 }
@@ -83,7 +90,7 @@ func (i *Item) MarshalJSON() ([]byte, error) {
  * UnmarshalJSON is the required function for structs that implement the
  * Unmarshaler interface.
  */
-func (i *Item) UnmarshalJSON(b []byte) error {
+func (item *Item) UnmarshalJSON(b []byte) error {
 	type tempItem struct {
 		Href     string   `json:"href"`
 		Metadata Metadata `json:"i-object-metadata"`
@@ -97,25 +104,53 @@ func (i *Item) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	i.Href = t.Href
+	item.Href = t.Href
 
 	for _, rel := range t.Metadata {
 		if rel.Rel == DescriptionRel {
-			i.Description = rel.Val
+			item.Description = rel.Val
 		} else {
-			i.Metadata = append(i.Metadata, rel)
+			item.Metadata = append(item.Metadata, rel)
 		}
 	}
 
-	if i.Href == "" {
+	if item.Href == "" {
 		err := errors.New(`"href" is a mandatory attribute`)
 		return err
 	}
 
-	if i.Description == "" {
+	if item.Description == "" {
 		err := errors.New(`"` + DescriptionRel + `" is a mandatory metadata element`)
 		return err
 	}
 
 	return nil
+}
+
+/*
+ * Rels returns a slice containing all the Rel values of this item.
+ */
+func (item *Item) Rels() []string {
+	rels := make([]string, len(item.Metadata))
+
+	for i, rel := range item.Metadata {
+		rels[i] = rel.Rel
+	}
+
+	return rels
+}
+
+/*
+ * Vals returns a slice of all values that match the given rel value.
+ */
+func (item *Item) Vals(key string) []string {
+	vals := []string{}
+
+	for _, rel := range item.Metadata {
+		if rel.Rel == key {
+			vals = append(vals, rel.Val)
+		}
+	}
+
+	return vals
 }

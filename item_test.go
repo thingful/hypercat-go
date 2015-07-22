@@ -44,22 +44,35 @@ func TestAddRel(t *testing.T) {
 	}
 }
 
-func TestAddMetadata(t *testing.T) {
+func TestReplaceRel(t *testing.T) {
 	item := NewItem("/data", "description")
+
+	item.AddRel("relation", "value")
+
+	if len(item.Metadata) != 1 {
+		t.Errorf("Item metadata length should be 1")
+	}
+
+	item.ReplaceRel("relation", "newvalue")
+
+	if len(item.Metadata) != 1 {
+		t.Errorf("Item metadata length should be 1")
+	}
+
+	rel := Rel{Rel: "relation", Val: "newvalue"}
+
+	if !reflect.DeepEqual(rel, item.Metadata[0]) {
+		t.Errorf("Expected Item metadata item to '%v', got '%v'", rel, item.Metadata[0])
+	}
+}
+
+func TestReplaceRelWhenNotFound(t *testing.T) {
+	item := NewItem("/data", "description")
+
+	item.ReplaceRel("relation", "newvalue")
 
 	if len(item.Metadata) != 0 {
 		t.Errorf("Item metadata length should be 0")
-	}
-
-	metadata := Metadata{
-		*NewRel("relation1", "value"),
-		*NewRel("relation2", "value"),
-	}
-
-	item.AddMetadata(metadata)
-
-	if len(item.Metadata) != 2 {
-		t.Errorf("Item metadata length should be 2")
 	}
 }
 
@@ -162,5 +175,35 @@ func TestInvalidItemUnmarshalling(t *testing.T) {
 		if err == nil {
 			t.Errorf("Item unmarshalling should have reported an error with input: '%v'", testcase)
 		}
+	}
+}
+
+func TestItemRels(t *testing.T) {
+	item := NewItem("/data", "description")
+
+	item.AddRel("relation1", "value1")
+	item.AddRel("relation2", "value2")
+	item.AddRel("relation1", "value3")
+
+	expected := []string{"relation1", "relation2", "relation1"}
+	got := item.Rels()
+
+	if !reflect.DeepEqual(expected, got) {
+		t.Errorf("Item rels error, expected '%v', got '%v'", expected, got)
+	}
+}
+
+func TestItemVals(t *testing.T) {
+	item := NewItem("/data", "description")
+
+	item.AddRel("relation1", "value1")
+	item.AddRel("relation2", "value2")
+	item.AddRel("relation1", "value3")
+
+	expected := []string{"value1", "value3"}
+	got := item.Vals("relation1")
+
+	if !reflect.DeepEqual(expected, got) {
+		t.Errorf("Item Vals error, expected '%v', got '%v'", expected, got)
 	}
 }
