@@ -37,6 +37,22 @@ func TestRelConstructor(t *testing.T) {
 	}
 }
 
+func TestMetadata(t *testing.T) {
+	metadata := Metadata{}
+
+	if len(metadata) != 0 {
+		t.Errorf("Item metadata length should be 0")
+	}
+
+	rel := NewRel("relation1", "value")
+
+	metadata = append(metadata, *rel)
+
+	if len(metadata) != 1 {
+		t.Errorf("Item metadata length should be 1")
+	}
+}
+
 func TestRelUnmarshalling(t *testing.T) {
 	str := `{"rel":"relation","val":"value"}`
 
@@ -54,8 +70,8 @@ func TestRelUnmarshalling(t *testing.T) {
 
 func TestMetadataMarshalling(t *testing.T) {
 	metadata := Metadata{
-		Rel{"relation", "value"},
-		Rel{"relation", "value"},
+		*NewRel("relation1", "value"),
+		*NewRel("relation2", "value"),
 	}
 
 	bytes, err := json.Marshal(metadata)
@@ -64,7 +80,7 @@ func TestMetadataMarshalling(t *testing.T) {
 		t.Errorf("Error marshalling Metadata: %v", err)
 	}
 
-	expected := `[{"rel":"relation","val":"value"},{"rel":"relation","val":"value"}]`
+	expected := `[{"rel":"relation1","val":"value"},{"rel":"relation2","val":"value"}]`
 
 	if string(bytes) != expected {
 		t.Errorf("Metadata marshalling error, expected '%v', got '%v'", expected, string(bytes))

@@ -52,8 +52,8 @@ func TestAddMetadata(t *testing.T) {
 	}
 
 	metadata := Metadata{
-		Rel{Rel: "relation1", Val: "value"},
-		Rel{Rel: "relation2", Val: "value"},
+		*NewRel("relation1", "value"),
+		*NewRel("relation2", "value"),
 	}
 
 	item.AddMetadata(metadata)
