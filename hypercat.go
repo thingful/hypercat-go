@@ -9,7 +9,7 @@ const (
 	// HyperCatVersion is the version of HyperCat this library currently supports
 	HyperCatVersion = "2.0"
 
-	// MediaType is the default mime type of HyperCat resources
+	// HyperCatMediaType is the default mime type of HyperCat resources
 	HyperCatMediaType = "application/vnd.hypercat.catalogue+json"
 
 	// DescriptionRel is the URI for the hasDescription relationship
@@ -50,8 +50,8 @@ func NewHyperCat(description string) *HyperCat {
 }
 
 /*
- * Parse is a convenience function that parses a HyperCat catalogue string, and
- * builds an in memory HyperCat instance.
+ * Parse is a function that parses a HyperCat catalogue string, and builds an
+ * in memory HyperCat instance.
  */
 func Parse(str string) (*HyperCat, error) {
 	cat := HyperCat{}
