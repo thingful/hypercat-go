@@ -13,6 +13,10 @@ func TestHyperCatConstructor(t *testing.T) {
 		t.Errorf("HyperCat creation error, expected '%v' got '%v'", "description", catalogue.Description)
 	}
 
+	if catalogue.ContentType != HyperCatMediaType {
+		t.Errorf("HyperCat creation error, should set ContentType to '%v'", HyperCatMediaType)
+	}
+
 	m := Metadata{}
 
 	if !reflect.DeepEqual(catalogue.Metadata, m) {
@@ -223,15 +227,15 @@ func TestValidParse(t *testing.T) {
 		expected HyperCat
 	}{
 		{
-			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"},{"rel":"urn:X-hypercat:rels:isContentType","val":"application/vnd.hypercat.catalogue+json"}]}`,
 			HyperCat{Items: Items{*item}, Metadata: Metadata{Rel{Rel: "foo", Val: "bar"}}, Description: "Catalogue description"},
 		},
 		{
-			`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			`{"items":[],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"},{"rel":"urn:X-hypercat:rels:isContentType","val":"application/vnd.hypercat.catalogue+json"}]}`,
 			HyperCat{Items: Items{}, Metadata: Metadata{Rel{Rel: "foo", Val: "bar"}}, Description: "Catalogue description"},
 		},
 		{
-			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
+			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"},{"rel":"urn:X-hypercat:rels:isContentType","val":"application/vnd.hypercat.catalogue+json"}]}`,
 			HyperCat{Items: Items{*item}, Description: "Catalogue description"},
 		},
 	}
@@ -245,6 +249,27 @@ func TestValidParse(t *testing.T) {
 
 		if cat.Description != testcase.expected.Description {
 			t.Errorf("HyperCat unmarshalling error, expected '%v', got '%v'", testcase.expected.Description, cat.Description)
+		}
+	}
+}
+
+func TestInvalidParse(t *testing.T) {
+	var testcases = []string{
+		`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":""},{"rel":"urn:X-hypercat:rels:isContentType","val":"application/vnd.hypercat.catalogue+json"}]}`,
+		`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:isContentType","val":"application/vnd.hypercat.catalogue+json"}]}`,
+		`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"},{"rel":"urn:X-hypercat:rels:isContentType","val":""}]}`,
+		`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
+		`{"items":[{"href":"","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"},{"rel":"urn:X-hypercat:rels:isContentType","val":"application/vnd.hypercat.catalogue+json"}]}`,
+		`{"items":[{"i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"},{"rel":"urn:X-hypercat:rels:isContentType","val":"application/vnd.hypercat.catalogue+json"}]}`,
+		`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":""}]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"},{"rel":"urn:X-hypercat:rels:isContentType","val":"application/vnd.hypercat.catalogue+json"}]}`,
+		`{"items":[{"href":"/cat","i-object-metadata":[]}],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"},{"rel":"urn:X-hypercat:rels:isContentType","val":"application/vnd.hypercat.catalogue+json"}]}`,
+	}
+
+	for _, testcase := range testcases {
+		_, err := Parse(testcase)
+
+		if err == nil {
+			t.Errorf("HyperCat parser should have returned an error for json: '%v'", testcase)
 		}
 	}
 }

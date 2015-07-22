@@ -51,16 +51,21 @@ type HyperCat struct {
 	Items       Items    `json:"items"`
 	Metadata    Metadata `json:"item-metadata"`
 	Description string   `json:"-"` // HyperCat spec is fuzzy about whether there can be more than one description. We assume not.
+	ContentType string   `json:"-"`
 }
 
 /*
  * NewHyperCat is a constructor function that creates and returns a HyperCat
- * instance.
+ * instance. Accepts the description as a parameter.
+ *
+ * Initializes Metadata to an empty slice, and ContentType to the default
+ * HyperCat content type.
  */
 func NewHyperCat(description string) *HyperCat {
 	return &HyperCat{
 		Description: description,
 		Metadata:    Metadata{},
+		ContentType: HyperCatMediaType,
 	}
 }
 
@@ -145,6 +150,10 @@ func (h *HyperCat) MarshalJSON() ([]byte, error) {
 		metadata = append(metadata, Rel{Rel: DescriptionRel, Val: h.Description})
 	}
 
+	if h.ContentType != "" {
+		metadata = append(metadata, Rel{Rel: ContentTypeRel, Val: h.ContentType})
+	}
+
 	return json.Marshal(struct {
 		Items    []Item   `json:"items"`
 		Metadata Metadata `json:"item-metadata"`
@@ -175,6 +184,8 @@ func (h *HyperCat) UnmarshalJSON(b []byte) error {
 	for _, rel := range t.Metadata {
 		if rel.Rel == DescriptionRel {
 			h.Description = rel.Val
+		} else if rel.Rel == ContentTypeRel {
+			h.ContentType = rel.Val
 		} else {
 			h.Metadata = append(h.Metadata, rel)
 		}
@@ -182,6 +193,11 @@ func (h *HyperCat) UnmarshalJSON(b []byte) error {
 
 	if h.Description == "" {
 		err := errors.New(`"` + DescriptionRel + `" is a mandatory metadata element`)
+		return err
+	}
+
+	if h.ContentType == "" {
+		err := errors.New(`"` + ContentTypeRel + `" is a mandatory metadata element`)
 		return err
 	}
 
