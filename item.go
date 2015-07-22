@@ -32,10 +32,10 @@ func NewItem(href, description string) *Item {
 }
 
 /*
- * AddRelation is a convenience function for adding a relation to an item.
+ * AddRel is a convenience function for adding a Rel object to an item.
  */
-func (i *Item) AddRelation(rel, value string) {
-	i.Metadata = append(i.Metadata, Rel{Rel: rel, Val: value})
+func (i *Item) AddRel(rel, val string) {
+	i.Metadata = append(i.Metadata, Rel{Rel: rel, Val: val})
 }
 
 /*

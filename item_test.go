@@ -24,14 +24,14 @@ func TestItemConstructor(t *testing.T) {
 	}
 }
 
-func TestAddRelation(t *testing.T) {
+func TestAddRel(t *testing.T) {
 	item := NewItem("/data", "description")
 
 	if len(item.Metadata) != 0 {
 		t.Errorf("Item metadata length should be 0")
 	}
 
-	item.AddRelation("relation", "value")
+	item.AddRel("relation", "value")
 
 	if len(item.Metadata) != 1 {
 		t.Errorf("Item metadata length should be 1")
@@ -51,7 +51,7 @@ func TestIsCatalogue(t *testing.T) {
 		t.Errorf("Item should not be a catalogue")
 	}
 
-	item.AddRelation(ContentTypeRel, HyperCatMediaType)
+	item.AddRel(ContentTypeRel, HyperCatMediaType)
 
 	if !item.IsCatalogue() {
 		t.Errorf("Item should be a catalogue.")
@@ -61,7 +61,7 @@ func TestIsCatalogue(t *testing.T) {
 func TestIsCatalogueWrongRel(t *testing.T) {
 	item := NewItem("/data", "description")
 
-	item.AddRelation("foo", HyperCatMediaType)
+	item.AddRel("foo", HyperCatMediaType)
 
 	if item.IsCatalogue() {
 		t.Errorf("Item should not be a catalogue")
