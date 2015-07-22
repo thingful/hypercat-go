@@ -35,7 +35,7 @@ func NewItem(href, description string) *Item {
  * AddRelation is a convenience function for adding a relation to an item.
  */
 func (i *Item) AddRelation(rel, value string) {
-	i.Metadata = append(i.Metadata, Rel{Rel: rel, Value: value})
+	i.Metadata = append(i.Metadata, Rel{Rel: rel, Val: value})
 }
 
 /*
@@ -44,7 +44,7 @@ func (i *Item) AddRelation(rel, value string) {
  */
 func (i *Item) IsCatalogue() bool {
 	for _, rel := range i.Metadata {
-		if rel.Rel == ContentTypeRel && rel.Value == HyperCatMediaType {
+		if rel.Rel == ContentTypeRel && rel.Val == HyperCatMediaType {
 			return true
 		}
 	}
@@ -60,7 +60,7 @@ func (i *Item) MarshalJSON() ([]byte, error) {
 	metadata := i.Metadata
 
 	if i.Description != "" {
-		metadata = append(metadata, Rel{Rel: DescriptionRel, Value: i.Description})
+		metadata = append(metadata, Rel{Rel: DescriptionRel, Val: i.Description})
 	}
 
 	return json.Marshal(struct {
@@ -94,7 +94,7 @@ func (i *Item) UnmarshalJSON(b []byte) error {
 
 	for _, rel := range t.Metadata {
 		if rel.Rel == DescriptionRel {
-			i.Description = rel.Value
+			i.Description = rel.Val
 		} else {
 			i.Metadata = append(i.Metadata, rel)
 		}

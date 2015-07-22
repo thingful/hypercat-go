@@ -6,7 +6,7 @@ import (
 )
 
 func TestRel(t *testing.T) {
-	rel := Rel{Rel: "relation", Value: "value"}
+	rel := Rel{Rel: "relation", Val: "value"}
 
 	bytes, err := json.Marshal(rel)
 
@@ -31,8 +31,8 @@ func TestRelUnmarshalling(t *testing.T) {
 		t.Errorf("Rel unmarshalling error, expected '%v', got '%v'", "relation", rel.Rel)
 	}
 
-	if rel.Value != "value" {
-		t.Errorf("Rel unmarshalling error, expected '%v', got '%v'", "value", rel.Value)
+	if rel.Val != "value" {
+		t.Errorf("Rel unmarshalling error, expected '%v', got '%v'", "value", rel.Val)
 	}
 }
 

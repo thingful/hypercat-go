@@ -6,11 +6,21 @@ package hypercat
  * entity or concept.
  */
 type Rel struct {
-	Rel   string `json:"rel"`
-	Value string `json:"val"`
+	Rel string `json:"rel"`
+	Val string `json:"val"`
 }
 
 /*
  * Metadata is a simple type alias for a slice of Rel structs.
  */
 type Metadata []Rel
+
+/*
+ * NewRel is a constructor function that creates and returns a Rel instance.
+ */
+func NewRel(rel, val string) *Rel {
+	return &Rel{
+		Rel: rel,
+		Val: val,
+	}
+}

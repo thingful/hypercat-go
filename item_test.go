@@ -37,7 +37,7 @@ func TestAddRelation(t *testing.T) {
 		t.Errorf("Item metadata length should be 1")
 	}
 
-	rel := Rel{Rel: "relation", Value: "value"}
+	rel := Rel{Rel: "relation", Val: "value"}
 
 	if !reflect.DeepEqual(rel, item.Metadata[0]) {
 		t.Errorf("Expected Item metadata item to '%v', got '%v'", rel, item.Metadata[0])
@@ -74,7 +74,7 @@ func TestItemMarshalling(t *testing.T) {
 		expected string
 	}{
 		{
-			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Rel{Rel: "foo", Value: "bar"}}},
+			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Rel{Rel: "foo", Val: "bar"}}},
 			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
 		},
 		{
@@ -107,7 +107,7 @@ func TestItemUnmarshalling(t *testing.T) {
 		},
 		{
 			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
-			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Rel{Rel: "foo", Value: "bar"}}},
+			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Rel{Rel: "foo", Val: "bar"}}},
 		},
 	}
 
