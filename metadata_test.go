@@ -21,6 +21,22 @@ func TestRel(t *testing.T) {
 	}
 }
 
+func TestRelConstructor(t *testing.T) {
+	rel := NewRel("relation", "value")
+
+	bytes, err := json.Marshal(rel)
+
+	if err != nil {
+		t.Errorf("Error marshalling Rel: %v", err)
+	}
+
+	expected := `{"rel":"relation","val":"value"}`
+
+	if string(bytes) != expected {
+		t.Errorf("Rel marshalling error, expected '%v', got '%v'", expected, string(bytes))
+	}
+}
+
 func TestRelUnmarshalling(t *testing.T) {
 	str := `{"rel":"relation","val":"value"}`
 
