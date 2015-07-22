@@ -39,6 +39,13 @@ func (i *Item) AddRel(rel, val string) {
 }
 
 /*
+ * AddMetadata is a function for adding multiple Rel objects in one go.
+ */
+func (i *Item) AddMetadata(metadata Metadata) {
+	i.Metadata = append(i.Metadata, metadata...)
+}
+
+/*
  * IsCatalogue returns true if the Item is a HyperCat catalogue, false
  * otherwise.
  */

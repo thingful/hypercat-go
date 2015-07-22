@@ -44,6 +44,25 @@ func TestAddRel(t *testing.T) {
 	}
 }
 
+func TestAddMetadata(t *testing.T) {
+	item := NewItem("/data", "description")
+
+	if len(item.Metadata) != 0 {
+		t.Errorf("Item metadata length should be 0")
+	}
+
+	metadata := Metadata{
+		Rel{Rel: "relation1", Val: "value"},
+		Rel{Rel: "relation2", Val: "value"},
+	}
+
+	item.AddMetadata(metadata)
+
+	if len(item.Metadata) != 2 {
+		t.Errorf("Item metadata length should be 2")
+	}
+}
+
 func TestIsCatalogue(t *testing.T) {
 	item := NewItem("/data", "description")
 
