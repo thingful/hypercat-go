@@ -67,8 +67,17 @@ func Parse(str string) (*HyperCat, error) {
 /*
  * AddItem is a convenience function for adding an Item to a catalogue.
  */
-func (h *HyperCat) AddItem(item *Item) {
+func (h *HyperCat) AddItem(item *Item) error {
+	for _, i := range h.Items {
+		if item.Href == i.Href {
+			err := errors.New(`An item with href: "` + item.Href + `" is a already defined within the catalogue`)
+			return err
+		}
+	}
+
 	h.Items = append(h.Items, *item)
+
+	return nil
 }
 
 /*

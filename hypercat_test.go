@@ -28,10 +28,33 @@ func TestAddItem(t *testing.T) {
 		t.Errorf("Catalogue initial items length should be 0, got '%v'", len(cat.Items))
 	}
 
-	cat.AddItem(item)
+	err := cat.AddItem(item)
+
+	if err != nil {
+		t.Errorf("Error adding item to catalogue: %v", err)
+	}
 
 	if len(cat.Items) != 1 {
 		t.Errorf("Catalogue initial items length should be 1, got '%v'", len(cat.Items))
+	}
+}
+
+func TestAddDuplicateItem(t *testing.T) {
+	cat := NewHyperCat("Catalogue description")
+	item1 := NewItem("/foo", "Item1 description")
+
+	err := cat.AddItem(item1)
+
+	if err != nil {
+		t.Errorf("Error adding item to catalogue: %v", err)
+	}
+
+	item2 := NewItem("/foo", "Item2 description")
+
+	err = cat.AddItem(item2)
+
+	if err == nil {
+		t.Errorf("Should not be permitted to add duplicate Item to catalogue")
 	}
 }
 
