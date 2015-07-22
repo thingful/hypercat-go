@@ -146,6 +146,10 @@ func TestHyperCatMarshalling(t *testing.T) {
 		expected string
 	}{
 		{
+			*NewHyperCat("Catalogue description"),
+			`{"items":[],"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"},{"rel":"urn:X-hypercat:rels:isContentType","val":"` + HyperCatMediaType + `"}]}`,
+		},
+		{
 			HyperCat{Items: Items{*item}, Metadata: Metadata{Rel{Rel: "foo", Val: "bar"}}, Description: "Catalogue description"},
 			`{"items":[{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],"item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"}]}`,
 		},
