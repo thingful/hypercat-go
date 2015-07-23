@@ -36,4 +36,10 @@ const (
 
 	// SubstringSearchVal is the required value for catalogues that support substring search
 	SubstringSearchVal = "urn:X-hypercat:search:substring"
+
+	// LongitudeRel is the standard URI indicating an WGS84 latitude relationship
+	LongitudeRel = "http://www.w3.org/2003/01/geo/wgs84_pos#long"
+
+	// LatitudeRel is the standard URI indicating an WGS84 longitude relationship
+	LatitudeRel = "http://www.w3.org/2003/01/geo/wgs84_pos#lat"
 )
