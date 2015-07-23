@@ -166,6 +166,7 @@ func TestInvalidItemUnmarshalling(t *testing.T) {
 		`{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":""}]}`,
 		`{"href":"/cat","i-object-metadata":[]}`,
 		`{"href":"","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
+		`{"href":10,"i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
 	}
 
 	for _, testcase := range invalidInputs {
