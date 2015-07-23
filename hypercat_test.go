@@ -277,3 +277,33 @@ func TestInvalidParse(t *testing.T) {
 		}
 	}
 }
+
+func TestRels(t *testing.T) {
+	cat := NewHyperCat("description")
+
+	cat.AddRel("relation1", "value1")
+	cat.AddRel("relation2", "value2")
+	cat.AddRel("relation1", "value3")
+
+	expected := []string{"relation1", "relation2", "relation1"}
+	got := cat.Rels()
+
+	if !reflect.DeepEqual(expected, got) {
+		t.Errorf("Item rels error, expected '%v', got '%v'", expected, got)
+	}
+}
+
+func TestVals(t *testing.T) {
+	cat := NewHyperCat("description")
+
+	cat.AddRel("relation1", "value1")
+	cat.AddRel("relation2", "value2")
+	cat.AddRel("relation1", "value3")
+
+	expected := []string{"value1", "value3"}
+	got := cat.Vals("relation1")
+
+	if !reflect.DeepEqual(expected, got) {
+		t.Errorf("Item Vals error, expected '%v', got '%v'", expected, got)
+	}
+}

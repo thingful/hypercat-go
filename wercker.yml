@@ -8,4 +8,4 @@ build:
         - script:
             name: test
             code: |
-              make test
+              make full ARTEFACT_DIR=$WERCKER_REPORT_ARTIFACTS_DIR
