@@ -1,3 +1,8 @@
+// Package hypercat provides a library for working with HyperCat documents (see
+// http://www.hypercat.io). It is only compatible with the upcoming HyperCat
+// 2.0 release, so will not work properly with HyperCat 1.1 documents. This is
+// very much a work in progress, and currently just provides functionality for
+// building or parsing HyperCat documents.
 package hypercat
 
 import (
