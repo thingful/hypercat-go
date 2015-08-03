@@ -1,3 +1,8 @@
+// Package hypercat provides a library for working with HyperCat documents (see
+// http://www.hypercat.io). It is only compatible with the upcoming HyperCat
+// 2.0 release, so will not work properly with HyperCat 1.1 documents. This is
+// very much a work in progress, and currently just provides functionality for
+// building or parsing HyperCat documents.
 package hypercat
 
 import (
@@ -5,10 +10,8 @@ import (
 	"errors"
 )
 
-/*
- * HyperCat is the representation of the HyperCat catalogue object, which is
- * the parent element of each catalogue instance.
- */
+// HyperCat is the representation of the HyperCat catalogue object, which is
+// the parent element of each catalogue instance.
 type HyperCat struct {
 	Items       Items    `json:"items"`
 	Metadata    Metadata `json:"item-metadata"`
@@ -16,13 +19,11 @@ type HyperCat struct {
 	ContentType string   `json:"-"`
 }
 
-/*
- * NewHyperCat is a constructor function that creates and returns a HyperCat
- * instance. Accepts the description as a parameter.
- *
- * Initializes Metadata to an empty slice, and ContentType to the default
- * HyperCat content type.
- */
+// NewHyperCat is a constructor function that creates and returns a HyperCat
+// instance. Accepts the description as a parameter.
+//
+// Initializes Metadata to an empty slice, and ContentType to the default
+// HyperCat content type.
 func NewHyperCat(description string) *HyperCat {
 	return &HyperCat{
 		Description: description,
@@ -32,10 +33,8 @@ func NewHyperCat(description string) *HyperCat {
 	}
 }
 
-/*
- * Parse is a function that parses a HyperCat catalogue string, and builds an
- * in memory HyperCat instance.
- */
+// Parse is a function that parses a HyperCat catalogue string, and builds an
+// in memory HyperCat instance.
 func Parse(str string) (*HyperCat, error) {
 	cat := HyperCat{}
 	err := json.Unmarshal([]byte(str), &cat)
@@ -47,20 +46,16 @@ func Parse(str string) (*HyperCat, error) {
 	return &cat, nil
 }
 
-/*
- * AddRel is a function for adding a Rel object to a catalogue. This may result
- * in duplicated Rel keys as this is permitted by the HyperCat spec.
- * TODO: this code is duplicated in item
- */
+// AddRel is a function for adding a Rel object to a catalogue. This may result
+// in duplicated Rel keys as this is permitted by the HyperCat spec.
+// TODO: this code is duplicated in item
 func (h *HyperCat) AddRel(rel, val string) {
 	h.Metadata = append(h.Metadata, Rel{Rel: rel, Val: val})
 }
 
-/*
- * ReplaceRel is a function that attempts to replace the value of a specific
- * Rel object if it is attached to this Catalogue. If the Rel key isn't found
- * this will have no effect.
- */
+// ReplaceRel is a function that attempts to replace the value of a specific
+// Rel object if it is attached to this Catalogue. If the Rel key isn't found
+// this will have no effect.
 func (h *HyperCat) ReplaceRel(rel, val string) {
 	for i, relationship := range h.Metadata {
 		if relationship.Rel == rel {
@@ -69,10 +64,8 @@ func (h *HyperCat) ReplaceRel(rel, val string) {
 	}
 }
 
-/*
- * AddItem is a function for adding an Item to a catalogue. Returns an error if
- * we try to add an Item whose href is already defined within the catalogue.
- */
+// AddItem is a function for adding an Item to a catalogue. Returns an error if
+// we try to add an Item whose href is already defined within the catalogue.
 func (h *HyperCat) AddItem(item *Item) error {
 	for _, i := range h.Items {
 		if item.Href == i.Href {
@@ -86,10 +79,9 @@ func (h *HyperCat) AddItem(item *Item) error {
 	return nil
 }
 
-/*
- * ReplaceItem is a function for replacing an item within a catalogue. Returns an error
- * if we try to replace an Item that isn't defined within the catalogue.
- */
+// ReplaceItem is a function for replacing an item within a catalogue. Returns
+// an error if we try to replace an Item that isn't defined within the
+// catalogue.
 func (h *HyperCat) ReplaceItem(newItem *Item) error {
 	for index, oldItem := range h.Items {
 		if newItem.Href == oldItem.Href {
@@ -102,10 +94,8 @@ func (h *HyperCat) ReplaceItem(newItem *Item) error {
 	return err
 }
 
-/*
- * MarshalJSON returns the JSON encoding of a HyperCat. This function is the
- * implementation of the Marshaler interface.
- */
+// MarshalJSON returns the JSON encoding of a HyperCat. This function is the
+// implementation of the Marshaler interface.
 func (h *HyperCat) MarshalJSON() ([]byte, error) {
 	metadata := h.Metadata
 
@@ -126,10 +116,8 @@ func (h *HyperCat) MarshalJSON() ([]byte, error) {
 	})
 }
 
-/*
- * UnmarshalJSON is the required function for structs that implement the
- * Unmarshaler interface.
- */
+// UnmarshalJSON is the required function for structs that implement the
+// Unmarshaler interface.
 func (h *HyperCat) UnmarshalJSON(b []byte) error {
 	type tempCat struct {
 		Items    Items    `json:"items"`
@@ -167,9 +155,7 @@ func (h *HyperCat) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-/*
- * Rels returns a slice containing all the Rel values of catalogue's metadata.
- */
+// Rels returns a slice containing all the Rel values of catalogue's metadata.
 func (h *HyperCat) Rels() []string {
 	rels := make([]string, len(h.Metadata))
 
@@ -180,9 +166,7 @@ func (h *HyperCat) Rels() []string {
 	return rels
 }
 
-/*
- * Vals returns a slice of all values that match the given rel value.
- */
+// Vals returns a slice of all values that match the given rel value.
 func (h *HyperCat) Vals(key string) []string {
 	vals := []string{}
 
