@@ -3,6 +3,8 @@
 This project contains an experimental library for working with HyperCat
 from Go.
 
+[![GoDoc](https://godoc.org/github.com/umbrellium/hypercat-go?status.svg)](https://godoc.org/github.com/umbrellium/hypercat-go)
+
 ## HyperCat
 
 For more information about HyperCat please see:
@@ -10,8 +12,9 @@ http://wiki.1248.io/doku.php?id=hypercat
 
 ## Disclaimer
 
-This project represents a very much first foray into Go, so probably is
-horribly written in a number of important ways, and isn't currently useful.
+This project represents a very much first foray into Go, so probably is unidiomatic
+in a number of important ways, and isn't currently that useful, though it is now being
+used internally for a HyperCat service we are implementing.
 
 ## Usage
 
