@@ -1,6 +1,6 @@
 # HyperCat Go
 
-This project contains an experimental library for working with HyperCat
+This project contains an experimental library for working with the upcoming HyperCat 2.0 specification.
 from Go.
 
 [![GoDoc](https://godoc.org/github.com/umbrellium/hypercat-go?status.svg)](https://godoc.org/github.com/umbrellium/hypercat-go)
