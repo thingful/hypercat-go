@@ -23,13 +23,13 @@ const (
 	SupportsSearchRel = "urn:X-hypercat:rels:supportsSearch"
 
 	// SimpleSearchVal is the required value for catalogues that support HyperCat simple search.
-	SimpleSearchVal = "urn:X­hypercat:search:simple"
+	SimpleSearchVal = "urn:X-hypercat:search:simple"
 
 	// GeoBoundSearchVal is the required value for catalogues that support geographic bounding box search
 	GeoBoundSearchVal = "urn:X-hypercat:search:geobound"
 
 	// LexicographicSearchVal is the required value for catalogues that support lexicographic searching
-	LexicographicSearchVal = "urn:X­hypercat:search:lexrange"
+	LexicographicSearchVal = "urn:X-hypercat:search:lexrange"
 
 	// MultiSearchVal is the required value for catalogues that support multi-search
 	MultiSearchVal = "urn:X-hypercat:search:multi"
