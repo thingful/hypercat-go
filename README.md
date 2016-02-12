@@ -7,8 +7,8 @@ from Go.
 
 ## HyperCat
 
-For more information about HyperCat please see:
-http://wiki.1248.io/doku.php?id=hypercat
+For more information about HyperCat please see: http://www.hypercat.io/standard.html or 
+http://wiki.1248.io/doku.php
 
 ## Disclaimer
 
