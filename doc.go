@@ -59,7 +59,11 @@ Similarly we can use `Unmarshal` to convert a supplied JSON document into a
 struct to work with:
 
 	cat := hypercat.Hypercat{}
-	err := json.Unmarshal(jsonBlob, &cat)
+	err := json.Unmarshal(jsonBytes, &cat)
 
+There is a convenience method that allows you to parse a Hypercat struct
+directly from any io.Reader, e.g.:
+
+	cat, err := hypercat.Parse(strings.NewReader(jsonString))
 */
 package hypercat

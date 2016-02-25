@@ -89,6 +89,13 @@ cat := hypercat.Hypercat{}
 err := json.Unmarshal(jsonBlob, &cat)
 ```
 
+There is a convenience method that allows you to parse a Hypercat struct
+directly from any io.Reader, e.g.:
+
+```go
+cat, err := hypercat.Parse(strings.NewReader(jsonString))
+```
+
 In addition to this the library provides some additional methods for
 manipulating and return metadata and items from catalogues, but for full
 details please see the full documentation.
