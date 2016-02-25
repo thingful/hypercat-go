@@ -2,14 +2,13 @@ package hypercat
 
 import (
 	"encoding/json"
-	"errors"
 )
 
-// Item is the representation of the HyperCat item object, which is the main
+// Item is the representation of the Hypercat item object, which is the main
 // object stored within a catalogue instance.
 type Item struct {
 	Href        string   `json:"href"`
-	Metadata    Metadata `json:"i-object-metadata"`
+	Metadata    Metadata `json:"item-metadata"`
 	Description string   `json:"-"` // Spec is unclear about whether there can be more than one description. We assume not.
 }
 
@@ -26,7 +25,7 @@ func NewItem(href, description string) *Item {
 }
 
 // AddRel is a function for adding a Rel object to an item. This may result in
-// duplicated Rel keys as this is permitted by the HyperCat spec.
+// duplicated Rel keys as this is permitted by the Hypercat spec.
 func (item *Item) AddRel(rel, val string) {
 	item.Metadata = append(item.Metadata, Rel{Rel: rel, Val: val})
 }
@@ -42,11 +41,11 @@ func (item *Item) ReplaceRel(rel, val string) {
 	}
 }
 
-// IsCatalogue returns true if the Item is a HyperCat catalogue, false
+// IsCatalogue returns true if the Item is a Hypercat catalogue, false
 // otherwise.
 func (item *Item) IsCatalogue() bool {
 	for _, rel := range item.Metadata {
-		if rel.Rel == ContentTypeRel && rel.Val == HyperCatMediaType {
+		if rel.Rel == ContentTypeRel && rel.Val == HypercatMediaType {
 			return true
 		}
 	}
@@ -65,7 +64,7 @@ func (item *Item) MarshalJSON() ([]byte, error) {
 
 	return json.Marshal(struct {
 		Href     string    `json:"href"`
-		Metadata *Metadata `json:"i-object-metadata"`
+		Metadata *Metadata `json:"item-metadata"`
 	}{
 		Href:     item.Href,
 		Metadata: &metadata,
@@ -77,7 +76,7 @@ func (item *Item) MarshalJSON() ([]byte, error) {
 func (item *Item) UnmarshalJSON(b []byte) error {
 	type tempItem struct {
 		Href     string   `json:"href"`
-		Metadata Metadata `json:"i-object-metadata"`
+		Metadata Metadata `json:"item-metadata"`
 	}
 
 	t := tempItem{}
@@ -99,13 +98,11 @@ func (item *Item) UnmarshalJSON(b []byte) error {
 	}
 
 	if item.Href == "" {
-		err := errors.New(`"href" is a mandatory attribute`)
-		return err
+		return ErrMissingHref
 	}
 
 	if item.Description == "" {
-		err := errors.New(`"` + DescriptionRel + `" is a mandatory metadata element`)
-		return err
+		return ErrMissingDescriptionRel
 	}
 
 	return nil

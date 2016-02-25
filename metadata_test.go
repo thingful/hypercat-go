@@ -57,7 +57,10 @@ func TestRelUnmarshalling(t *testing.T) {
 	str := `{"rel":"relation","val":"value"}`
 
 	rel := Rel{}
-	json.Unmarshal([]byte(str), &rel)
+	err := json.Unmarshal([]byte(str), &rel)
+	if err != nil {
+		t.Errorf("Unexpected error: %#v", err)
+	}
 
 	if rel.Rel != "relation" {
 		t.Errorf("Rel unmarshalling error, expected '%v', got '%v'", "relation", rel.Rel)
