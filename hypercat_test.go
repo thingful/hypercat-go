@@ -182,7 +182,7 @@ func TestHypercatMarshalling(t *testing.T) {
 func TestHypercatUnmarshalling(t *testing.T) {
 	item := NewItem("/cat", "Item description")
 
-	var hypercatTests = []struct {
+	var unmarshalTests = []struct {
 		input    string
 		expected Hypercat
 	}{
@@ -214,7 +214,7 @@ func TestHypercatUnmarshalling(t *testing.T) {
 		},
 	}
 
-	for _, testcase := range hypercatTests {
+	for _, testcase := range unmarshalTests {
 		cat := Hypercat{}
 		err := json.Unmarshal([]byte(testcase.input), &cat)
 		if err != nil {
@@ -253,7 +253,7 @@ func TestInvalidHypercatUnmarshalling(t *testing.T) {
 func TestValidParse(t *testing.T) {
 	item := NewItem("/cat", "Item description")
 
-	var hypercatTests = []struct {
+	var parseTests = []struct {
 		input    string
 		expected Hypercat
 	}{
@@ -285,7 +285,7 @@ func TestValidParse(t *testing.T) {
 		},
 	}
 
-	for _, testcase := range hypercatTests {
+	for _, testcase := range parseTests {
 		cat, err := Parse(strings.NewReader(testcase.input))
 
 		if err != nil {
