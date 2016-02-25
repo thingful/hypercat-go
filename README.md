@@ -4,6 +4,7 @@ This project contains an experimental library for working with Hypercat
 from Go.
 
 [![GoDoc](https://godoc.org/github.com/thingful/hypercat-go?status.svg)](https://godoc.org/github.com/thingful/hypercat-go)
+[![wercker status](https://app.wercker.com/status/865e58581f5725d918e2bda4aeee9f22/s/master "wercker status")](https://app.wercker.com/project/bykey/865e58581f5725d918e2bda4aeee9f22)
 
 ## Hypercat
 
@@ -103,7 +104,3 @@ details please see the full documentation.
 ## License
 
 See [LICENSE](LICENSE)
-
-## Build Status
-
-[![wercker status](https://app.wercker.com/status/865e58581f5725d918e2bda4aeee9f22/s/master "wercker status")](https://app.wercker.com/project/bykey/865e58581f5725d918e2bda4aeee9f22)
