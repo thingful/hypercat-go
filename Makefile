@@ -1,35 +1,35 @@
 # Simple Makefile for testing hypercat-go
-#
+
 ARTEFACT_DIR = ./tmp
 GOCMD = go
 GOTEST = $(GOCMD) test -coverprofile=$(ARTEFACT_DIR)/cover.out
-GOLINT = golint
+GOLINT = gometalinter
 GOCOVER = $(GOCMD) tool cover
 
 default: test
 
-echo:
-	echo $(ARTEFACT_DIR)
-
 setup:
-	$(GOCMD) get -u github.com/golang/lint/golint
+	$(GOCMD) get -u github.com/alecthomas/gometalinter
+	$(GOLINT) --install --update
 
 test:
+	mkdir -p $(ARTEFACT_DIR)
 	$(GOTEST) ./...
 
-coverage:
+coverage: test
+	mkdir -p $(ARTEFACT_DIR)
 	$(GOCOVER) -func=$(ARTEFACT_DIR)/cover.out
 
-html:
+html: test
+	mkdir -p $(ARTEFACT_DIR)
 	$(GOCOVER) -html=$(ARTEFACT_DIR)/cover.out -o $(ARTEFACT_DIR)/coverage.html
 
 lint:
 	$(GOLINT) ./...
 
 clean:
-	rm -f $(ARTEFACT_DIR)/cover.out
-	rm -f $(ARTEFACT_DIR)/coverage.html
+	rm -rf $(ARTEFACT_DIR)
 
-full: test coverage html
+full: lint coverage html
 
 .PHONY: setup test lint coverage full html clean
