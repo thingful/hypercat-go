@@ -25,7 +25,7 @@ html: test
 	$(GOCOVER) -html=$(ARTEFACT_DIR)/cover.out -o $(ARTEFACT_DIR)/coverage.html
 
 lint:
-	$(GOLINT) ./... --disable=dupl
+	$(GOLINT) ./...
 
 clean:
 	rm -rf $(ARTEFACT_DIR)
