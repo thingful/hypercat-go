@@ -83,7 +83,7 @@ func TestIsCatalogue(t *testing.T) {
 		t.Errorf("Item should not be a catalogue")
 	}
 
-	item.AddRel(ContentTypeRel, HyperCatMediaType)
+	item.AddRel(ContentTypeRel, HypercatMediaType)
 
 	if !item.IsCatalogue() {
 		t.Errorf("Item should be a catalogue.")
@@ -93,7 +93,7 @@ func TestIsCatalogue(t *testing.T) {
 func TestIsCatalogueWrongRel(t *testing.T) {
 	item := NewItem("/data", "description")
 
-	item.AddRel("foo", HyperCatMediaType)
+	item.AddRel("foo", HypercatMediaType)
 
 	if item.IsCatalogue() {
 		t.Errorf("Item should not be a catalogue")
@@ -107,11 +107,11 @@ func TestItemMarshalling(t *testing.T) {
 	}{
 		{
 			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Rel{Rel: "foo", Val: "bar"}}},
-			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
+			`{"href":"/cat","item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
 		},
 		{
 			Item{Href: "/cat", Description: "Description"},
-			`{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
+			`{"href":"/cat","item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
 		},
 	}
 
@@ -134,18 +134,21 @@ func TestItemUnmarshalling(t *testing.T) {
 		expected Item
 	}{
 		{
-			`{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
+			`{"href":"/cat","item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
 			Item{Href: "/cat", Description: "Description"},
 		},
 		{
-			`{"href":"/cat","i-object-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
+			`{"href":"/cat","item-metadata":[{"rel":"foo","val":"bar"},{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
 			Item{Href: "/cat", Description: "Description", Metadata: Metadata{Rel{Rel: "foo", Val: "bar"}}},
 		},
 	}
 
 	for _, testcase := range itemTests {
 		item := Item{}
-		json.Unmarshal([]byte(testcase.input), &item)
+		err := json.Unmarshal([]byte(testcase.input), &item)
+		if err != nil {
+			t.Errorf("Unexpected error: %#v", err)
+		}
 
 		if item.Href != testcase.expected.Href {
 			t.Errorf("Item unmarshalling error, expected '%v', got '%v'", testcase.expected.Href, item.Href)
@@ -163,10 +166,10 @@ func TestItemUnmarshalling(t *testing.T) {
 
 func TestInvalidItemUnmarshalling(t *testing.T) {
 	invalidInputs := []string{
-		`{"href":"/cat","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":""}]}`,
-		`{"href":"/cat","i-object-metadata":[]}`,
-		`{"href":"","i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
-		`{"href":10,"i-object-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
+		`{"href":"/cat","item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":""}]}`,
+		`{"href":"/cat","item-metadata":[]}`,
+		`{"href":"","item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
+		`{"href":10,"item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Description"}]}`,
 	}
 
 	for _, testcase := range invalidInputs {

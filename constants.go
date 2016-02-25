@@ -1,11 +1,11 @@
 package hypercat
 
 const (
-	// HyperCatVersion is the version of HyperCat this library currently supports
-	HyperCatVersion = "2.0"
+	// HypercatVersion is the version of Hypercat this library currently supports
+	HypercatVersion = "3.0"
 
-	// HyperCatMediaType is the default mime type of HyperCat resources
-	HyperCatMediaType = "application/vnd.hypercat.catalogue+json"
+	// HypercatMediaType is the default mime type of Hypercat resources
+	HypercatMediaType = "application/vnd.hypercat.catalogue+json"
 
 	// DescriptionRel is the URI for the hasDescription relationship
 	DescriptionRel = "urn:X-hypercat:rels:hasDescription:en"
@@ -22,8 +22,8 @@ const (
 	// SupportsSearchRel is the URI for the supportsSearch relationship
 	SupportsSearchRel = "urn:X-hypercat:rels:supportsSearch"
 
-	// SimpleSearchVal is the required value for catalogues that support HyperCat simple search.
-	SimpleSearchVal = "urn:X-hypercat:search:simple"
+	// SimpleSearchVal is the required value for catalogues that support Hypercat simple search.
+	SimpleSearchVal = "urn:X­hypercat:search:simple"
 
 	// GeoBoundSearchVal is the required value for catalogues that support geographic bounding box search
 	GeoBoundSearchVal = "urn:X-hypercat:search:geobound"
@@ -34,8 +34,8 @@ const (
 	// MultiSearchVal is the required value for catalogues that support multi-search
 	MultiSearchVal = "urn:X-hypercat:search:multi"
 
-	// SubstringSearchVal is the required value for catalogues that support substring search
-	SubstringSearchVal = "urn:X-hypercat:search:substring"
+	// PrefixSearchVal is the required value for catalogues that support prefix search (formerly substring search)
+	PrefixSearchVal = "urn:X-hypercat:search:prefix"
 
 	// LongitudeRel is the standard URI indicating an WGS84 latitude relationship
 	LongitudeRel = "http://www.w3.org/2003/01/geo/wgs84_pos#long"
