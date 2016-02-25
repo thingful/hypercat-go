@@ -1,7 +1,8 @@
+<img src="http://www.hypercat.io/uploads/1/2/4/4/12443814/1456331964.png">
+
 # Hypercat Go
 
-This project contains an experimental library for working with Hypercat
-from Go.
+This project contains a simple library for working with Hypercat from Go.
 
 [![GoDoc](https://godoc.org/github.com/thingful/hypercat-go?status.svg)](https://godoc.org/github.com/thingful/hypercat-go)
 [![wercker status](https://app.wercker.com/status/865e58581f5725d918e2bda4aeee9f22/s/master "wercker status")](https://app.wercker.com/project/bykey/865e58581f5725d918e2bda4aeee9f22)
@@ -9,14 +10,7 @@ from Go.
 ## Hypercat
 
 For more information about Hypercat please see:
-http://wiki.1248.io/doku.php?id=hypercat
-
-## Disclaimer
-
-This project represents a very much first foray into Go, so probably is
-unidiomatic in a number of important ways, and isn't currently that useful,
-though it is now being used internally for a Hypercat service we are
-implementing.
+http://www.hypercat.io/standard.html
 
 ## Usage
 
