@@ -7,6 +7,12 @@ build:
         - setup-go-workspace
 
         - script:
+            name: install gometalinter
+            code: |
+              go get github.com/alecthomas/gometalinter
+              gometalinter --install --update
+
+        - script:
             name: test
             code: |
               make full ARTEFACT_DIR=$WERCKER_REPORT_ARTIFACTS_DIR
