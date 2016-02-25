@@ -106,4 +106,4 @@ See [LICENSE](LICENSE)
 
 ## Build Status
 
-[![wercker status](https://app.wercker.com/status/555ad920801f3936bc7031747c74e072/m "wercker status")](https://app.wercker.com/project/bykey/555ad920801f3936bc7031747c74e072)
+[![wercker status](https://app.wercker.com/status/865e58581f5725d918e2bda4aeee9f22/s/master "wercker status")](https://app.wercker.com/project/bykey/865e58581f5725d918e2bda4aeee9f22)
