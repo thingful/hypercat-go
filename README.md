@@ -15,8 +15,7 @@ http://www.hypercat.io/standard.html
 ## Usage
 
 The library is only compatible with the upcoming Hypercat 3.0 release, so will
-not work properly with either Hypercat 1.1 or 2.0 documents. The package is
-documented at:
+not work properly with either Hypercat 1.1 or 2.0 documents.
 
 To import the library use:
 
