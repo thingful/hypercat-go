@@ -179,7 +179,7 @@ func TestHypercatMarshalling(t *testing.T) {
 	}
 }
 
-func TestHypercatUnmarshalling(t *testing.T) {
+func TestHypercatUnmarshalParse(t *testing.T) {
 	item := NewItem("/cat", "Item description")
 
 	var unmarshalTests = []struct {
@@ -214,11 +214,26 @@ func TestHypercatUnmarshalling(t *testing.T) {
 		},
 	}
 
+	// test normal unmarshalling
 	for _, testcase := range unmarshalTests {
 		cat := Hypercat{}
+
 		err := json.Unmarshal([]byte(testcase.input), &cat)
 		if err != nil {
 			t.Errorf("Unexpected error: %#v", err)
+		}
+
+		if cat.Description != testcase.expected.Description {
+			t.Errorf("Hypercat unmarshalling error, expected '%v', got '%v'", testcase.expected.Description, cat.Description)
+		}
+	}
+
+	// test Parse helper
+	for _, testcase := range unmarshalTests {
+		cat, err := Parse(strings.NewReader(testcase.input))
+
+		if err != nil {
+			t.Errorf("Hypercat parsing error: '%v'", err)
 		}
 
 		if cat.Description != testcase.expected.Description {
@@ -246,54 +261,6 @@ func TestInvalidHypercatUnmarshalling(t *testing.T) {
 
 		if err == nil {
 			t.Errorf("Hypercat unmarshalling should have reported an error with input: '%v'", testcase)
-		}
-	}
-}
-
-func TestValidParse(t *testing.T) {
-	item := NewItem("/cat", "Item description")
-
-	var parseTests = []struct {
-		input    string
-		expected Hypercat
-	}{
-		{
-			`{"items":[{"href":"/cat","item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],
-				"catalogue-metadata":[
-					{"rel":"foo","val":"bar"},
-					{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"},
-					{"rel":"urn:X-hypercat:rels:isContentType","val":"application/vnd.hypercat.catalogue+json"}
-				]}`,
-			Hypercat{Items: Items{*item}, Metadata: Metadata{Rel{Rel: "foo", Val: "bar"}}, Description: "Catalogue description"},
-		},
-		{
-			`{"items":[],
-				"catalogue-metadata":[
-					{"rel":"foo","val":"bar"},
-					{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"},
-					{"rel":"urn:X-hypercat:rels:isContentType","val":"application/vnd.hypercat.catalogue+json"}
-				]}`,
-			Hypercat{Items: Items{}, Metadata: Metadata{Rel{Rel: "foo", Val: "bar"}}, Description: "Catalogue description"},
-		},
-		{
-			`{"items":[{"href":"/cat","item-metadata":[{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Item description"}]}],
-				"catalogue-metadata":[
-					{"rel":"urn:X-hypercat:rels:hasDescription:en","val":"Catalogue description"},
-					{"rel":"urn:X-hypercat:rels:isContentType","val":"application/vnd.hypercat.catalogue+json"}
-				]}`,
-			Hypercat{Items: Items{*item}, Description: "Catalogue description"},
-		},
-	}
-
-	for _, testcase := range parseTests {
-		cat, err := Parse(strings.NewReader(testcase.input))
-
-		if err != nil {
-			t.Errorf("Hypercat parsing error: '%v'", err)
-		}
-
-		if cat.Description != testcase.expected.Description {
-			t.Errorf("Hypercat unmarshalling error, expected '%v', got '%v'", testcase.expected.Description, cat.Description)
 		}
 	}
 }
