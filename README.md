@@ -3,7 +3,7 @@
 This project contains an experimental library for working with Hypercat
 from Go.
 
-[![GoDoc](https://godoc.org/github.com/thingful/hypercat-go?status.svg)](https://godoc.org/github.com/umbrellium/hypercat-go)
+[![GoDoc](https://godoc.org/github.com/thingful/hypercat-go?status.svg)](https://godoc.org/github.com/thingful/hypercat-go)
 
 ## Hypercat
 
